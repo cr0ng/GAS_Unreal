@@ -4,17 +4,23 @@
 #include "Character/TestCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "GameAbilitySystem/StatusAttributeSet.h"
+#include "Components/WidgetComponent.h"
+#include "Interface/TwinResource.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	BarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	BarWidgetComponent->SetupAttachment(RootComponent);
+
 	// 컴포넌트 생성
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 	// 어트리뷰트 셋 생성
 	StatusAttributeSet = CreateDefaultSubobject<UStatusAttributeSet>(TEXT("Status"));
+
 }
 
 void ATestCharacter::TestHealthChange(float Amount)
@@ -24,6 +30,7 @@ void ATestCharacter::TestHealthChange(float Amount)
 		float CurrentValue = StatusAttributeSet->GetHealth();
 		StatusAttributeSet->SetHealth(CurrentValue + Amount);
 	}
+
 }
 
 // Called when the game starts or when spawned
@@ -42,11 +49,23 @@ void ATestCharacter::BeginPlay()
 		onHealthChange.AddUObject(this, &ATestCharacter::OnHealthChange); // Health가 변경되었을 때 실행될 함수 바인딩
 	}
 
-	//if (StatusAttributeSet)
-	//{
-	//	//StatusAttributeSet->Health = 10.0f;	// 절대 안 됨
-	//	StatusAttributeSet->SetHealth(50.0f);	// 무조건 Setter로 변경해야 한다.
-	//}
+	if (StatusAttributeSet)
+	{
+		if (BarWidgetComponent && BarWidgetComponent->GetWidget())
+		{
+			if (BarWidgetComponent->GetWidget()->Implements<UTwinResource>())
+			{
+				ITwinResource::Execute_UpdateMaxHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMaxHealth());
+				ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetHealth());
+
+				ITwinResource::Execute_UpdateMaxMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMaxMana());
+				ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMana());
+
+			}
+		}
+		//StatusAttributeSet->Health = 10.0f;	// 절대 안 됨
+		//StatusAttributeSet->SetHealth(50.0f);	// 무조건 Setter로 변경해야 한다.
+	}
 }
 
 // Called every frame
@@ -70,6 +89,11 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ATestCharacter::OnHealthChange(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(LogTemp, Log, TEXT("Health Change : %.1f-> %.1f"), InData.OldValue, InData.NewValue);
+	ITwinResource::Execute_UpdateCurrentHealth(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetHealth());
+}
 
+void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
+{
+	ITwinResource::Execute_UpdateCurrentMana(BarWidgetComponent->GetWidget(), StatusAttributeSet->GetMana());
 }
 

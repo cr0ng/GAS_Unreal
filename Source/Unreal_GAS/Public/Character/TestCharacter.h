@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/WidgetComponent.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
 #include "TestCharacter.generated.h"
@@ -18,6 +19,7 @@ class UNREAL_GAS_API ATestCharacter : public ACharacter, public IAbilitySystemIn
 public:
 	// Sets default values for this character's properties
 	ATestCharacter();
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {
 		return AbilitySystemComponent;
 	};
@@ -32,6 +34,7 @@ protected:
 
 private:
 	void OnHealthChange(const FOnAttributeChangeData& InData);
+	void OnManaChange(const FOnAttributeChangeData& InData);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
@@ -40,6 +43,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ability")
 	TObjectPtr<UAbilitySystemComponent>AbilitySystemComponent = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UWidgetComponent>BarWidgetComponent = nullptr;
 
 private:
 	UPROPERTY()
