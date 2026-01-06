@@ -4,7 +4,7 @@
 #include "GameAbilitySystem/StatusAttributeSet.h"
 #include "GameplayEffectExtension.h"
 
-UStatusAttributeSet::UStatusAttributeSet()
+UResourceAttributeSet::UResourceAttributeSet()
 {
 	InitHealth(100.0f);
 	InitMaxHealth(100.0f);
@@ -12,7 +12,7 @@ UStatusAttributeSet::UStatusAttributeSet()
 	InitMaxMana(100.0f);
 }
 
-void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UResourceAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 	// 값 검증 및 제한(Clamp) 용도, 순수한 수학적 처리 용도
 
@@ -26,9 +26,19 @@ void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 		// 체력이 음수가 되지 않게 하기
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
 	}
+
+	if (Attribute == GetMaxHealthAttribute()) // MaxHealth가 변경되었는데
+	{
+		if (NewValue < GetHealth()) // Health가 MaxHealth의 새 값보다 크다면
+		{
+			// Health를 MaxHealth의 새 값으로 덮어써라
+			UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponentChecked();
+			AbilityComp->ApplyModToAttribute(GetHealthAttribute(), EGameplayModOp::Override, NewValue);
+		}
+	}
 }
 
-void UStatusAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UResourceAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	// 게임 로직 실행, 이벤트 발생, 다른 시스템과의 상호작용 용도
 	Super::PostGameplayEffectExecute(Data);
@@ -38,6 +48,8 @@ void UStatusAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		UE_LOG(LogTemp, Log, TEXT("현재 Health : %1.f"), GetHealth());
 		// 체력 변화 로직 호출
 
+		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+
 		if (GetHealth() <= 0.0f)
 		{
 			UE_LOG(LogTemp, Log, TEXT("사망"));
@@ -45,4 +57,8 @@ void UStatusAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		}
 	}
 
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
+	}
 }

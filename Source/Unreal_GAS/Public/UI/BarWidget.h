@@ -37,6 +37,7 @@ protected:
 	TObjectPtr<UTextBlock> Max = nullptr;
 
 private:
+	float CurrentValue = 0.0f;
 	float MaxValue = 1.0f;
 
 };
