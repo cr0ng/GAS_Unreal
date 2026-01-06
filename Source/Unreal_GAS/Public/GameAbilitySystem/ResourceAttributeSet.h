@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "StatusAttributeSet.generated.h"
+#include "ResourceAttributeSet.generated.h"
 
 /**
  * 
