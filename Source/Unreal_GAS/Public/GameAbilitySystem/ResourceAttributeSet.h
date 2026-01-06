@@ -47,4 +47,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, MaxMana)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData MoveSpeed;
+	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, MoveSpeed)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData JumpHeight;
+	ATTRIBUTE_ACCESSORS(UResourceAttributeSet, JumpHeight)
 };

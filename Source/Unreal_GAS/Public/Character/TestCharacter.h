@@ -47,6 +47,7 @@ private:
 	void OnMaxHealthChange(const FOnAttributeChangeData& InData);
 	void OnManaChange(const FOnAttributeChangeData& InData);
 	void OnMaxManaChange(const FOnAttributeChangeData& InData);
+	void OnMoveSpeedChange(const FOnAttributeChangeData& InData);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Test")
@@ -73,4 +74,6 @@ private:
 	FGameplayTag Tag_EffectDamage;
 
 	FActiveGameplayEffectHandle TestInfinite;
+
+	
 };

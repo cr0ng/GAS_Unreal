@@ -10,6 +10,8 @@ UResourceAttributeSet::UResourceAttributeSet()
 	InitMaxHealth(100.0f);
 	InitMana(100.0f);
 	InitMaxMana(100.0f);
+	InitMoveSpeed(500.0f);
+	InitJumpHeight(700.0f);
 }
 
 void UResourceAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -35,6 +37,11 @@ void UResourceAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribu
 			UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponentChecked();
 			AbilityComp->ApplyModToAttribute(GetHealthAttribute(), EGameplayModOp::Override, NewValue);
 		}
+	}
+
+	if (Attribute == GetMoveSpeedAttribute())
+	{
+		UE_LOG(LogTemp, Log, TEXT("GetMoveSpeedAttribute"));
 	}
 }
 

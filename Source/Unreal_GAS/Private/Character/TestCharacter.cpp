@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameAbilitySystem/ResourceAttributeSet.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Interface/TwinResource.h"
 
 // Sets default values
@@ -102,6 +103,10 @@ void ATestCharacter::BeginPlay()
 			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMaxManaAttribute());
 
 		onMaxManaChange.AddUObject(this, &ATestCharacter::OnMaxManaChange);
+
+		FOnGameplayAttributeValueChange& onMoveSpeedChange =
+			AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UResourceAttributeSet::GetMoveSpeedAttribute());
+		onMoveSpeedChange.AddUObject(this, &ATestCharacter::OnMoveSpeedChange);
 	}
 
 	if (ResourceAttributeSet)
@@ -161,5 +166,16 @@ void ATestCharacter::OnManaChange(const FOnAttributeChangeData& InData)
 void ATestCharacter::OnMaxManaChange(const FOnAttributeChangeData& InData)
 {
 	ITwinResource::Execute_UpdateMaxMana(BarWidgetComponent->GetWidget(), ResourceAttributeSet->GetMaxMana());
+}
+
+void ATestCharacter::OnMoveSpeedChange(const FOnAttributeChangeData& InData)
+{
+	UE_LOG(LogTemp, Log, TEXT("OnMoveSpeed : %.1f-> %.1f"), InData.OldValue, InData.NewValue);
+	
+	if (UCharacterMovementComponent* MoveComp = GetCharacterMovement())
+	{
+		MoveComp->MaxWalkSpeed = InData.NewValue;
+	UE_LOG(LogTemp, Log, TEXT("속도 바꾸기"));
+	}
 }
 
