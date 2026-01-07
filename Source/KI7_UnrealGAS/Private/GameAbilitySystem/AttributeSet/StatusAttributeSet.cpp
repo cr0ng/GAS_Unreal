@@ -1,14 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameAbilitySystem/StatusAttributeSet.h"
+#include "GameAbilitySystem/AttributeSet/StatusAttributeSet.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 UStatusAttributeSet::UStatusAttributeSet()
 {
+	InitAttackPower(10.0f);
+	InitCriticalRate(0.2f);
 	InitMoveSpeed(500.0f);
 	InitJumpPower(700.0f);
+}
+
+void UStatusAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute == GetCriticalRateAttribute())
+	{
+		// 0 ~ 1
+		NewValue = FMath::Clamp(NewValue, 0.0f, 1.0f);
+	}
 }
 
 void UStatusAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
