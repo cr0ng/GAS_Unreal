@@ -5,6 +5,9 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 
+#include "GameFramework/Character.h"
+
+
 AGC_ActorAura::AGC_ActorAura()
 {
 	GameplayCueTag = FGameplayTag::RequestGameplayTag(FName("GameplayCue.TestAura"));
@@ -21,11 +24,26 @@ bool AGC_ActorAura::OnActive_Implementation(AActor* MyTarget, const FGameplayCue
 
     if (MyTarget)
     {
-        SpawnedVFX = UNiagaraFunctionLibrary::SpawnSystemAtLocation(    // 파티클 만들어서 저장해 놓기
-            GetWorld(),
+        // 캐릭터에 붙이기
+        USceneComponent* AttachComponent = nullptr;
+        ACharacter* Character = Cast<ACharacter>(MyTarget);
+        if (Character)
+        {
+            AttachComponent = Character->GetMesh();  // Mesh에 붙이면 움직임에 따라감
+        }
+        else
+        {
+            AttachComponent = MyTarget->GetRootComponent();  // 그냥 Actor이면 RootComponent에 붙임
+        }
+
+        SpawnedVFX = UNiagaraFunctionLibrary::SpawnSystemAttached(    // 파티클 만들어서 저장해 놓기
             TestVFX,
-            MyTarget->GetActorLocation(),   // 생성 위치
-            MyTarget->GetActorRotation()    // 생성할 때 회전
+            AttachComponent,        // AttachTo
+            NAME_None,              // AttachPointName
+            FVector::ZeroVector,    // 위치 오프셋
+            FRotator::ZeroRotator,  // 회전 오프셋
+            EAttachLocation::SnapToTarget, // 위치 맞춤
+            true                    // AutoDestroy
         );
         return true;
     }
