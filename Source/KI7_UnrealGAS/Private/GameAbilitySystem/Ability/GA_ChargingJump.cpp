@@ -79,7 +79,7 @@ void UGA_ChargingJump::ExecuteSuperJump(const FGameplayAbilityActorInfo* ActorIn
 
 			FVector Direction(1, 0, 1);
 			Direction.Normalize();	// 앞쪽 위 45도 방향	
-			Direction = Character->GetActorRotation().RotateVector(Direction);
+			Direction = Character->GetActorRotation().RotateVector(Direction); // 캐릭터가 바라보는 방향
 			Character->LaunchCharacter(Direction * JumpPower, false, false);// 캐릭터 날리기
 		}
 	}
