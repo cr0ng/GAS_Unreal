@@ -8,8 +8,8 @@ public class KI7_UnrealGAS : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core", "CoreUObject", "Engine", "InputCore",
+		PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core", "CoreUObject", "Engine", "InputCore", 
 			"EnhancedInput", "Niagara" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { 

@@ -10,9 +10,9 @@ UGA_Haste::UGA_Haste()
 }
 
 void UGA_Haste::ActivateAbility(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayAbilitySpecHandle Handle, 
+	const FGameplayAbilityActorInfo* ActorInfo, 
+	const FGameplayAbilityActivationInfo ActivationInfo, 
 	const FGameplayEventData* TriggerEventData)
 {
 	if (!EffectClass)
@@ -33,7 +33,7 @@ void UGA_Haste::ActivateAbility(
 
 	FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		EffectClass, GetAbilityLevel(), EffectContext);
-
+	
 	if (SpecHandle.IsValid())
 	{
 		ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());

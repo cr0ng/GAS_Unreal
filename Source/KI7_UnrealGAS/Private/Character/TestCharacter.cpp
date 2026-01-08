@@ -5,10 +5,10 @@
 #include "AbilitySystemComponent.h"
 #include "GameAbilitySystem/AttributeSet/ResourceAttributeSet.h"
 #include "GameAbilitySystem/AttributeSet/StatusAttributeSet.h"
+#include "GameAbilitySystem/GameAbilitySystemEnums.h"
 #include "Components/WidgetComponent.h"
 #include "Interface/TwinResource.h"
 #include "EnhancedInputComponent.h"
-#include "GameAbilitySystem/GameAbilitySystemEnums.h"
 
 // Sets default values
 ATestCharacter::ATestCharacter()
@@ -96,14 +96,24 @@ void ATestCharacter::BeginPlay()
 		{
 			AbilitySystemComponent->GiveAbility(
 				FGameplayAbilitySpec(
-					HasteClass,												// 어빌리티 클래스
-					1,														// 레벨
-					static_cast<int32>(EAbilityInputID::Haste),				// 입력 ID
-					this													// 소스
+					HasteClass,									// 어빌리티 클래스
+					1,											// 레벨
+					static_cast<int32>(EAbilityInputID::Haste),	// 입력 ID
+					this										// 소스
 				)
 			);
 		}
-
+		if (SuperJumpClass)
+		{
+			AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(
+					SuperJumpClass,									// 어빌리티 클래스
+					1,												// 레벨
+					static_cast<int32>(EAbilityInputID::SuperJump),	// 입력 ID
+					this											// 소스
+				)
+			);
+		}
 
 		// 초기화 이후에만 가능
 		FOnGameplayAttributeValueChange& onHealthChange =
@@ -178,6 +188,7 @@ void ATestCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	if (EnhancedInput)
 	{
 		EnhancedInput->BindAction(IA_Ability1, ETriggerEvent::Started, this, &ATestCharacter::OnAbility1Press);
+		EnhancedInput->BindAction(IA_Ability2, ETriggerEvent::Started, this, &ATestCharacter::OnAbility2Press);
 	}
 
 }
@@ -218,9 +229,29 @@ void ATestCharacter::OnMaxManaChange(const FOnAttributeChangeData& InData)
 
 void ATestCharacter::OnAbility1Press()
 {
+	UE_LOG(LogTemp, Log, TEXT("OnAbility1Press"));
 	if (AbilitySystemComponent)
 	{
 		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::Haste));
 	}
+}
+
+void ATestCharacter::OnAbility2Press()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbility2Press"));
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(static_cast<int32>(EAbilityInputID::SuperJump));
+	}
+}
+
+void ATestCharacter::OnAbility3Press()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbility3Press"));
+}
+
+void ATestCharacter::OnAbility3Release()
+{
+	UE_LOG(LogTemp, Log, TEXT("OnAbility3Release"));
 }
 

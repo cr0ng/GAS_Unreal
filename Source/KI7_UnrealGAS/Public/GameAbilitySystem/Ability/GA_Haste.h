@@ -7,7 +7,7 @@
 #include "GA_Haste.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
 class KI7_UNREALGAS_API UGA_Haste : public UGameplayAbility
@@ -16,9 +16,9 @@ class KI7_UNREALGAS_API UGA_Haste : public UGameplayAbility
 public:
 	UGA_Haste();
 	virtual void ActivateAbility(
-		const FGameplayAbilitySpecHandle Handle,
-		const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo,
+		const FGameplayAbilitySpecHandle Handle, 
+		const FGameplayAbilityActorInfo* ActorInfo, 
+		const FGameplayAbilityActivationInfo ActivationInfo, 
 		const FGameplayEventData* TriggerEventData) override;
 
 protected:
